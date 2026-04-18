@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@400;600;700;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg:        #0a0c0f;
+  --bg2:       #111418;
+  --bg3:       #181c22;
+  --border:    #1f2631;
+  --border2:   #2a3040;
+  --text:      #e8edf5;
+  --muted:     #5a6478;
+  --accent:    #00d4ff;
+  --green:     #00e676;
+  --yellow:    #f5a623;
+  --red:       #ff4d4d;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-head: 'Syne', sans-serif;
+}
+
+body.light {
+  --bg:        #f1f5f9;
+  --bg2:       #ffffff;
+  --bg3:       #e2e8f0;
+  --border:    #cbd5e1;
+  --border2:   #94a3b8;
+  --text:      #0f172a;
+  --muted:     #64748b;
+  --accent:    #0284c7;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: var(--font-mono); }
+input  { font-family: var(--font-mono); }
+
+/* Scanline overlay for industrial feel */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Animations */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.animate-in { animation: slide-in 0.35s ease forwards; }
