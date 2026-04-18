@@ -68,11 +68,11 @@ export default function Machines() {
           const meta   = MACHINE_META[mid] || {}
 
           return (
-            <div key={mid} onClick={() => navigate(`/machines/${mid}`)}
+            <div key={mid} onClick={() => navigate(`/dashboard`)}
               style={{
                 background: 'var(--bg2)',
                 border: `1px solid ${color}44`,
-                borderRadius: 4, padding: '22px 24px',
+                borderRadius: 4, padding: '16px 20px',
                 cursor: 'pointer', transition: 'all 0.2s',
                 animation: 'slide-in 0.35s ease',
               }}
@@ -126,18 +126,18 @@ export default function Machines() {
               })}
 
               {/* Footer */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 16, paddingTop: 14, borderTop: '1px solid var(--border)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--border)' }}>
                 <div>
                   <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: 1, marginBottom: 2 }}>RISK SCORE</div>
                   <div style={{ fontSize: 26, fontWeight: 700, color, fontFamily: 'var(--font-head)', lineHeight: 1 }}>
                     {Math.round(risk * 100)}%
                   </div>
                 </div>
-                <span style={{
-                  padding: '8px 16px', borderRadius: 3,
-                  border: '1px solid var(--accent)', color: 'var(--accent)',
-                  fontSize: 10, letterSpacing: 2,
-                }}>DETAILS →</span>
+                <button onClick={(e) => { e.stopPropagation(); navigate('/dashboard') }} style={{
+                  padding: '8px 16px', borderRadius: 3, background: 'transparent',
+                  border: '1px solid var(--accent)', color: 'var(--accent)', cursor: 'pointer',
+                  fontSize: 10, letterSpacing: 2, transition: 'all 0.2s'
+                }}>DETAILS →</button>
               </div>
             </div>
           )

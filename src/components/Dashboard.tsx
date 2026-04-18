@@ -23,7 +23,7 @@ function MiniSparkline({ data, color }) {
   return (
     <ResponsiveContainer width="100%" height={40}>
       <LineChart data={d}>
-        <Line type="monotone" dataKey="v" stroke={color} dot={false} strokeWidth={1.5} />
+        <Line type="monotone" dataKey="v" stroke={color} dot={false} strokeWidth={2.5} />
       </LineChart>
     </ResponsiveContainer>
   )

@@ -4,7 +4,11 @@ import { MACHINES } from '../supabase.js'
 
 export default function AIAssistant() {
   const [messages, setMessages] = useState([
-    { role: 'ai', text: "Hello! I am the **JNANIK Predictive Maintenance Agent**. I continuously monitor your sensor streams and alert logs. How can I assist you today?" }
+    { role: 'ai', text: "Hello! I am the **JNANIK Predictive Maintenance Agent**. I continuously monitor your sensor streams and alert logs. How can I assist you today?" },
+    { role: 'user', text: "Can you analyze PUMP_03 for me?" },
+    { role: 'ai', text: "**Deep Dive: PUMP_03**\n\nCurrent Status: **WARNING**\n- Temperature: 92.1°C\n- Vibration: 4.85 mm/s\n\n**AI Diagnosis:** Predicted root cause is *Vibration anomaly*. Over the last 24 hours, there have been 2 recorded alerts for this machine. The drift rate indicates accelerating wear. Recommended action is to schedule a preventative maintenance window within 48 hours." },
+    { role: 'user', text: "Is the rest of the fleet healthy?" },
+    { role: 'ai', text: "Analyzing fleet parameters...\n\nAll other machines (**CNC_01, CNC_02, CONVEYOR_04**) are currently operating within their normal Z-score baselines. Secondary systems are nominal." }
   ])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)

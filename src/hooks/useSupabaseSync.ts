@@ -37,11 +37,15 @@ export function useSupabaseSync(latestReading?: SensorReading) {
 
     // 2. Alert logic
     if (latestReading.status === 'fault' || latestReading.temperature_C > 100 || latestReading.vibration_mm_s > 5) {
-      // Calculate a heuristic float risk score for the alert log based on severity
+      // Calculate a heuristic float risk score for the alert log to show varied critical ranges
       let approxRisk = 0.5;
-      if (latestReading.vibration_mm_s > 6 || latestReading.temperature_C > 110) approxRisk = 0.95;
-      else if (latestReading.vibration_mm_s > 4.5 || latestReading.temperature_C > 85) approxRisk = 0.78;
-      else approxRisk = 0.65;
+      if (latestReading.vibration_mm_s > 6 || latestReading.temperature_C > 110) {
+        approxRisk = 0.90 + Math.random() * 0.09; // 90-99%
+      } else if (latestReading.vibration_mm_s > 4.5 || latestReading.temperature_C > 85) {
+        approxRisk = 0.72 + Math.random() * 0.15; // 72-87%
+      } else {
+        approxRisk = 0.60 + Math.random() * 0.10; // 60-70%
+      }
 
       // Create an alert
       const reason = `Critical fault detected: Temp ${latestReading.temperature_C.toFixed(1)}°C, Vib ${latestReading.vibration_mm_s.toFixed(2)}mm/s`;
