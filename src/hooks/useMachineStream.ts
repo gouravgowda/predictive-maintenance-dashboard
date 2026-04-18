@@ -15,7 +15,9 @@ export function useMachineStream(machineId: string) {
     let isMounted = true;
 
     // Fetch initial history to avoid empty chart at load
-    fetch(`${API_URL}/history/${machineId}`)
+    fetch(`${API_URL}/history/${machineId}`, {
+      headers: { "ngrok-skip-browser-warning": "true" }
+    })
       .then(res => res.json())
       .then((data: SensorReading[]) => {
         if (!isMounted) return;
@@ -28,37 +30,58 @@ export function useMachineStream(machineId: string) {
       })
       .catch(e => console.error(e));
 
-    const connect = () => {
-      es = new EventSource(`${API_URL}/stream/${machineId}`);
+    const connect = async () => {
+      try {
+        const response = await fetch(`${API_URL}/stream/${machineId}`, {
+          headers: { 
+            "ngrok-skip-browser-warning": "true",
+            "Accept": "text/event-stream"
+          }
+        });
+        
+        if (!response.body) return;
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
 
-      es.onmessage = (event) => {
-        if (!isMounted) return;
-        try {
-          const reading: SensorReading = JSON.parse(event.data);
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
           
-          setLatestReading(reading);
-          
-          const newHistory = [...historyRef.current, reading].slice(-MAX_HISTORY);
-          historyRef.current = newHistory;
-          setHistory(newHistory);
-        } catch (err) {
-          console.error("Error parsing stream data", err);
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const dataString = line.slice(6).trim();
+                if (!dataString) continue;
+                const reading: SensorReading = JSON.parse(dataString);
+                
+                if (!isMounted) return;
+                setLatestReading(reading);
+                
+                const newHistory = [...historyRef.current, reading].slice(-MAX_HISTORY);
+                historyRef.current = newHistory;
+                setHistory(newHistory);
+              } catch (err) {
+                // Ignore parse errors from chunk fragmentation
+              }
+            }
+          }
         }
-      };
-
-      es.onerror = () => {
-        es?.close();
+      } catch (err) {
         if (isMounted) {
           setTimeout(connect, 3000);
         }
-      };
+      }
     };
 
     connect();
 
     return () => {
       isMounted = false;
-      if (es) es.close();
     };
   }, [machineId, API_URL]);
 
